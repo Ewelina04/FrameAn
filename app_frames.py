@@ -33,7 +33,7 @@ import re
 
 pd.options.mode.chained_assignment = None
 import warnings
-warnings.filterwarnings("ignore", category=np.VisibleDeprecationWarning)
+#warnings.filterwarnings("ignore", category=np.VisibleDeprecationWarning)
 
 
 import plotly.express as px
