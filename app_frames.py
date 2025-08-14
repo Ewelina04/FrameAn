@@ -946,7 +946,7 @@ def distribution_plot_compare2(data, contents_radio_categories_val_units, conten
                         ylabel='', xlabel=contents_radio_categories_val_units,
                         )
                 plt.tight_layout(pad=1.5)
-                sns.move_legend(plot1, loc='upper right', bbox_to_anchor = (0.8 - (3/ 30 ), 1.05), ncols = df[contents_radio_categories].nunique() )
+                #sns.move_legend(plot1, loc='upper right', bbox_to_anchor = (0.8 - (3/ 30 ), 1.05), ncols = df[contents_radio_categories].nunique() )
 
             add_spacelines()
             st.write(" ##### Single-level analysis ")
@@ -2504,4 +2504,5 @@ else:
 
     elif contents_radio_type == 'Single Corpus Analysis' and contents_radio_an_cat_unit == 'Target' and contents_radio3 == 'Ethotic Profile':
         Target_compare_scor( data_list = corpora_list )
+
 
