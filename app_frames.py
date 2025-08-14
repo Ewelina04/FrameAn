@@ -808,7 +808,7 @@ def distribution_plot_compare2(data, contents_radio_categories_val_units, conten
             distributions_dict[ col ] = df_dist[['Feature', 'Component', 'proportion', contents_radio_categories]]
 
 
-        pie_tab, plot_tab, corr_tab, table_tab, case_tab = st.tabs( ['Pie-chart', 'Bar-chart', 'Correlation', 'Tables', 'Cases'] )
+        pie_tab, plot_tab, table_tab, case_tab = st.tabs( ['Pie-chart', 'Bar-chart',  'Tables', 'Cases'] )
 
         dist_all = pd.concat( distributions_dict.values(), axis=0, ignore_index=True )
         dist_all = dist_all.melt(['Feature', 'Component', contents_radio_categories ], value_vars =  'proportion')
@@ -850,7 +850,7 @@ def distribution_plot_compare2(data, contents_radio_categories_val_units, conten
             st.pyplot(fig_pie)
 
 
-            if frames:
+            if frames == 2: # do not want that
                 sns.set(font_scale=1, style='whitegrid')
                 comps = dist_all.Feature.unique()
 
@@ -929,7 +929,7 @@ def distribution_plot_compare2(data, contents_radio_categories_val_units, conten
         with plot_tab:
             sns.set(style = 'whitegrid', font_scale=2.5)
 
-            if frames:
+            if frames == 2:
                 plot1 = sns.catplot( data = dist_all, kind = 'bar', y = 'Component', x = 'value', col = 'Feature', col_wrap = 2,
                         aspect = 1.15, height=h1, sharey=False, sharex=False, hue = contents_radio_categories, palette = colors)
 
@@ -938,16 +938,7 @@ def distribution_plot_compare2(data, contents_radio_categories_val_units, conten
                         )
                 plt.tight_layout(pad=1.5)
                 sns.move_legend(plot1, loc='upper right', bbox_to_anchor = (0.8 - (3/ 30 ), 1.05), ncols = df[contents_radio_categories].nunique() )
-            else:
-                if contents_radio_categories_val_units == "number":
-                    df_dist = df[ contents_radio_categories ].value_counts(normalize=False)
-                    df_dist = pd.DataFrame(df_dist).reset_index()
-                    df_dist.columns = [contents_radio_categories,'value']
-                else:
-                    df_dist = df[ contents_radio_categories ].value_counts(normalize=True).round(3) * 100
-                    df_dist = pd.DataFrame(df_dist).reset_index()
-                    df_dist.columns = [contents_radio_categories,'value']
-
+            else:              
                 plot1 = sns.catplot( data = df_dist, kind = 'bar', y = contents_radio_categories, x = 'value',
                         aspect = 1.15, height=h1, sharey=False, sharex=False, hue = contents_radio_categories, palette = colors)
 
@@ -965,114 +956,10 @@ def distribution_plot_compare2(data, contents_radio_categories_val_units, conten
             add_spacelines(3)
 
 
-        with corr_tab:
-            if frames:
-                add_spacelines(1)
-                corr_multiselect = st.multiselect("Choose component for the correlation analysis", components_feature, components_feature[0])
-                if len(corr_multiselect) > 1:
-                    corr_multiselect_feat = " & ".join(corr_multiselect)
-                    df[corr_multiselect_feat] = df[corr_multiselect].agg(' - '.join, axis=1)
-                    corr_multiselect = corr_multiselect_feat
-                else:
-                    corr_multiselect = corr_multiselect[0]
-
-                confusion_matrix = pd.crosstab( df[corr_multiselect].values, df[contents_radio_categories].values)
-                add_spacelines(2)
-
-                f1 = []
-                f2 = []
-                mt_corrs = []
-
-                from sklearn.metrics import matthews_corrcoef
-                for c1 in df[corr_multiselect].unique():
-                    for c2 in df[contents_radio_categories].unique():
-                        df_cor2 = df.copy()
-                        df_cor2[corr_multiselect] = df_cor2[corr_multiselect].map( {c1:1} ).fillna(0)
-                        df_cor2[contents_radio_categories] = df_cor2[contents_radio_categories].map( {c2:1} ).fillna(0)
-                        mt_corr = matthews_corrcoef( df_cor2[corr_multiselect].values, df_cor2[contents_radio_categories].values )
-                        f1.append(c1)
-                        f2.append(c2)
-                        mt_corrs.append( round(mt_corr, 3) )
-
-                #st.write(matthews_corrcoef( df[corr_multiselect].values, df['ethos'].values))
-                matrix_corr = pd.DataFrame( {corr_multiselect:f1 , contents_radio_categories.capitalize():f2, 'correlation':mt_corrs} )
-                cv, pval = cramers_corrected_stat( df[corr_multiselect].values, df[contents_radio_categories].values )
-
-                st.write( "**Overall correlation**" )
-                st.write("Cramer's V correlation: ", round(cv, 3), "; p value: ", round(pval, 3))
-                #add_spacelines(1)
-                obs = np.array( confusion_matrix )
-                res = ss.chi2_contingency(obs)
-                ex = res.expected_freq
-                dof = res.dof
-                cv2 = res.statistic
-                pval2 =  res.pvalue
-
-                st.write("Chi2 correlation: ", round(cv2, 3), "; p value: ", round(pval2, 3))
-                st.write( "Confusion matrix: " )
-                st.write(confusion_matrix)
-
-                st.write( "**Detailed correlation**" )
-                add_spacelines(1)
-                st.write("Matthews correlation coefficient (the *phi* coefficient)")
-                st.write(matrix_corr)
-
-            else:
-                confusion_matrix = pd.crosstab( data['Component'].astype('str').values, data[contents_radio_categories].values)
-                add_spacelines(2)
-                corr_multiselect = 'Component'
-
-                f1 = []
-                f2 = []
-                mt_corrs = []
-
-                from sklearn.metrics import matthews_corrcoef
-                for c1 in data[corr_multiselect].unique():
-                    for c2 in data[contents_radio_categories].unique():
-                        df_cor2 = data.copy()
-                        df_cor2[corr_multiselect] = df_cor2[corr_multiselect].map( {c1:1} ).fillna(0)
-                        df_cor2[contents_radio_categories] = df_cor2[contents_radio_categories].map( {c2:1} ).fillna(0)
-                        mt_corr = matthews_corrcoef( df_cor2[corr_multiselect].values, df_cor2[contents_radio_categories].values )
-                        f1.append(c1)
-                        f2.append(c2)
-                        mt_corrs.append( round(mt_corr, 3) )
-                        #st.write(c1, c2, mt_corr)
-
-                matrix_corr = pd.DataFrame( {corr_multiselect:f1 , contents_radio_categories.capitalize():f2, 'correlation':mt_corrs} )
-                cv, pval = cramers_corrected_stat( data[corr_multiselect].values, data[contents_radio_categories].values )
-
-                add_spacelines(6)
-                st.write( "**Overall correlation**" )
-                st.write("Cramer's V correlation: ", round(cv, 3), "; p value: ", round(pval, 3))
-                #add_spacelines(1)
-                obs = np.array( confusion_matrix )
-                res = ss.chi2_contingency(obs)
-                ex = res.expected_freq
-                dof = res.dof
-                cv2 = res.statistic
-                pval2 =  res.pvalue
-
-                st.write("Chi2 correlation: ", round(cv2, 3), "; p value: ", round(pval2, 3))
-                st.write( "Confusion matrix: " )
-                st.write(confusion_matrix)
-
-                add_spacelines(2)
-                st.write( "**Detailed correlation**" )
-                add_spacelines(1)
-                st.write("Matthews correlation coefficient (the *phi* coefficient)")
-                st.write(matrix_corr)
-
-
 
         with table_tab:
-            if frames:
-                components_feature = dist_all.Feature.unique()
-                for ff in components_feature:
-                    st.write( dist_all[dist_all.Feature == ff].sort_values(by = 'value', ascending=False).reset_index(drop=True) )
-            else:
-                st.write(df_dist.round())
+            st.write(df_dist.round())
             add_spacelines(1)
-
 
 
         with case_tab:
@@ -2617,3 +2504,4 @@ else:
 
     elif contents_radio_type == 'Single Corpus Analysis' and contents_radio_an_cat_unit == 'Target' and contents_radio3 == 'Ethotic Profile':
         Target_compare_scor( data_list = corpora_list )
+
