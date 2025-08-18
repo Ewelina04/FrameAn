@@ -852,7 +852,10 @@ def distribution_plot_compare2(data, contents_radio_categories_val_units, conten
 
         with case_tab:
             df = df.fillna("NA")
-            df[cols_frames_components+['AgentNumerosity', 'CauseLength', 'Agent']+colsText] = df[cols_frames_components+['AgentNumerosity', 'Agent','CauseLength']+colsText].astype('str')
+            try:
+              df[cols_frames_components+['AgentNumerosity', 'CauseLength', 'Agent']+colsText] = df[cols_frames_components+['AgentNumerosity', 'Agent','CauseLength']+colsText].astype('str')
+            except:
+              df = df.fillna("NONE")
 
             #st.write(df)
             dff_columns = [
@@ -2401,6 +2404,7 @@ else:
 
     elif contents_radio_type == 'Single Corpus Analysis' and contents_radio_an_cat_unit == 'Target' and contents_radio3 == 'Ethotic Profile':
         Target_compare_scor( data_list = corpora_list )
+
 
 
 
