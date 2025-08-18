@@ -2341,7 +2341,7 @@ else:
         if 'argument' in str(contents_radio_categories):
           df = load_data(cch_twi_log)
           df = df.copy()
-          df['arguments'] = df['arguments'].str.replace( "Default", "" ).str.lower()
+          df['arguments'] = df['arguments'].str.replace( "Default", "" ).str.lower().str.strip()
           df['ethos'] = df.ethos_label
           df['corpus'] = "Climate Change Twitter"
 
@@ -2401,6 +2401,7 @@ else:
 
     elif contents_radio_type == 'Single Corpus Analysis' and contents_radio_an_cat_unit == 'Target' and contents_radio3 == 'Ethotic Profile':
         Target_compare_scor( data_list = corpora_list )
+
 
 
 
