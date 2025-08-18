@@ -884,7 +884,7 @@ def distribution_plot_compare2(data, contents_radio_categories_val_units, conten
             
             nocases = len(dff_selected)
             if nocases > 50:
-              st.dataframe(dff_selected.sort_values(by = select_columns).reset_index(drop=True).dropna(how='all', axis=1).style.apply( colorred, axis=1 ).iloc[:50])
+              st.dataframe(dff_selected.sort_values(by = select_columns).reset_index(drop=True).dropna(how='all', axis=1).iloc[:50].style.apply( colorred, axis=1 ))
             else:
               st.dataframe(dff_selected.sort_values(by = select_columns).reset_index(drop=True).dropna(how='all', axis=1).style.apply( colorred, axis=1 ))
             st.write(f"No. of cases: {int(nocases)}.")
@@ -2410,6 +2410,7 @@ else:
 
     elif contents_radio_type == 'Single Corpus Analysis' and contents_radio_an_cat_unit == 'Target' and contents_radio3 == 'Ethotic Profile':
         Target_compare_scor( data_list = corpora_list )
+
 
 
 
