@@ -860,10 +860,10 @@ def distribution_plot_compare2(data, contents_radio_categories_val_units, conten
 
             #st.write(df)
             dff_columns = [
-                        'discussion', 'turn','map', 'sentence', 'CausationText', 'CausationEffect',
+                        'turn','sentence', 'CausationText', 'CausationEffect',
                        'CausationPolarity', 'CausationType', 'Component', 'InternalPolarity',
-                       'AgentNumerosity', 'Agent', 'CauseLength', 'ethos',  'Target', 'sentiment', 'emotion', 'arguments', 'speaker',
-                       'Causation begin', 'Causation end', 'CauseText', 'EffectText',
+                       'CauseLength', 'ethos',  'Target', 'sentiment', 'emotion', 'arguments', 'speaker',
+                      'CauseText', 'EffectText',
                        'AgentText', 'CircumstancesText',
                          ]
             dff_columns = set(dff_columns).intersection( set(df.columns) )
@@ -881,8 +881,13 @@ def distribution_plot_compare2(data, contents_radio_categories_val_units, conten
             for i, k in enumerate(dict_cond.keys()):
                 dff_selected = dff_selected[ dff_selected[str(k)].isin(dict_cond[k]) ]
             add_spacelines(2)
-            st.dataframe(dff_selected.sort_values(by = select_columns).reset_index(drop=True).dropna(how='all', axis=1).style.apply( colorred, axis=1 ))
-            st.write(f"No. of cases: {len(dff_selected)}.")
+            
+            nocases = len(dff_selected)
+            if nocases > 50:
+              st.dataframe(dff_selected.sort_values(by = select_columns).reset_index(drop=True).dropna(how='all', axis=1).style.apply( colorred, axis=1 ).iloc[:50])
+            else:
+              st.dataframe(dff_selected.sort_values(by = select_columns).reset_index(drop=True).dropna(how='all', axis=1).style.apply( colorred, axis=1 ))
+            st.write(f"No. of cases: {int(nocases)}.")
 
 
 
@@ -2405,6 +2410,7 @@ else:
 
     elif contents_radio_type == 'Single Corpus Analysis' and contents_radio_an_cat_unit == 'Target' and contents_radio3 == 'Ethotic Profile':
         Target_compare_scor( data_list = corpora_list )
+
 
 
 
