@@ -5,6 +5,7 @@
 
 # data
 cch_twi = r"NP-frames-up-ethos-NER.xlsx"
+cch_twi_log = r"NP-frames-up-logos-NER-wRephrase.xlsx"
 
 
 colors = {
@@ -2380,7 +2381,7 @@ with st.sidebar:
     if contents_radio_type == 'Comparative Corpus Analysis':
         st.write("### Analysis Units")
 
-        contents_radio_an_cat = st.radio("Unit picker", ('Text-based', 'Entity-based' ), label_visibility='collapsed')
+        contents_radio_an_cat = st.radio("Unit picker", ('Text-based', ), label_visibility='collapsed')
 
         if contents_radio_an_cat == 'Entity-based':
             contents_radio_an_cat_unit = st.radio("Next choose", ('Speaker',) ) # 'Agent', 'Target',
@@ -2443,18 +2444,26 @@ else:
             contents_radio_categories_val_units = st.radio("Choose the unit of statistic to display", ("percentage", "number" ) ) # horizontal=True, , label_visibility = 'collapsed'
 
         with c_contents1:
-            contents_radio_categories = st.selectbox("Choose layers for analysis", ("frames & ethos", "frames & sentiment", "frames & emotion" )) # horizontal=True,
+            contents_radio_categories = st.selectbox("Choose layers for analysis", ("frames & ethos", "frames & sentiment", "frames & emotion", "frames & arguments" )) # horizontal=True,
 
         #df = df[df.Component != 'Causation']
         #df = df[df.Component == 'Causation']
         add_spacelines(1)
-        df = corpora_list[-1]
+        if 'argument' in str(contents_radio_categories):
+          cor11 = load_data(cch_twi_log)
+          cor1 = cor11.copy()
+          cor1['arguments'] = cor1['arguments'].str.replace( "Default", "" )
+          cor1['ethos'] = cor1.ethos_label
+          cor1['corpus'] = "Climate Change Twitter"
+          corpora_list.append(cor1)
 
-        colsText = [c for c in df.columns if 'Text' in c]
-        cols_frames_components = [ 'Component', 'CausationEffect', 'CausationPolarity', 'CausationType',  'InternalPolarity' ]
-        cols2 = ['CausationEffect', 'CausationPolarity', 'CausationType', 'InternalPolarity', 'AgentNumerosity','Agent', 'CauseLength']
-        df[cols_frames_components+['AgentNumerosity', 'CauseLength']] = df[cols_frames_components+['AgentNumerosity', 'CauseLength']].fillna("NA").astype('str')
-        df[cols_frames_components+['AgentNumerosity', 'CauseLength']+colsText] = df[cols_frames_components+['AgentNumerosity', 'CauseLength']+colsText].astype('str')
+        else:
+          df = corpora_list[-1]
+          colsText = [c for c in df.columns if 'Text' in c]
+          cols_frames_components = [ 'Component', 'CausationEffect', 'CausationPolarity', 'CausationType',  'InternalPolarity' ]
+          cols2 = ['CausationEffect', 'CausationPolarity', 'CausationType', 'InternalPolarity', 'AgentNumerosity','Agent', 'CauseLength']
+          df[cols_frames_components+['AgentNumerosity', 'CauseLength']] = df[cols_frames_components+['AgentNumerosity', 'CauseLength']].fillna("NA").astype('str')
+          df[cols_frames_components+['AgentNumerosity', 'CauseLength']+colsText] = df[cols_frames_components+['AgentNumerosity', 'CauseLength']+colsText].astype('str')
         add_spacelines(1)
         df_c, df_nc = st.columns( 2, gap = 'large' )
         with df_c:
@@ -2504,5 +2513,6 @@ else:
 
     elif contents_radio_type == 'Single Corpus Analysis' and contents_radio_an_cat_unit == 'Target' and contents_radio3 == 'Ethotic Profile':
         Target_compare_scor( data_list = corpora_list )
+
 
 
