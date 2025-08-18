@@ -14,7 +14,7 @@ colors = {
 'villains':'#B91305', 'heroes':'#1AE510','neutral agent':'#5166d5',
 'villain':'#B91305', 'hero':'#1AE510',
 'joy' : '#8DF903', 'anger' : '#FD7E00', 'sadness' : '#0798C3', 'fear' : '#000000', 'disgust' :'#840079', 'surprise' : '#E1CA01',
-'conflict':'#B91305', 'inference':'#1AE510', 'rephrase':'#FD7E00'
+'conflict':'#B91305', 'inference':'#1AE510', 'rephrase':'#FD7E00',
 }
 
 #####################
@@ -863,6 +863,7 @@ def distribution_plot_compare2(data, contents_radio_categories_val_units, conten
                        'AgentText', 'CircumstancesText',
                          ]
             dff_columns = set(dff_columns).intersection( set(df.columns) )
+            dff_columns = list(dff_columns)
             dff = df[dff_columns].copy()
             select_columns = st.multiselect("Choose columns for specifying conditions", dff_columns, dff_columns[-2], key=df.Component.iloc[0])
             cols_columns = st.columns(len(select_columns))
@@ -2400,6 +2401,7 @@ else:
 
     elif contents_radio_type == 'Single Corpus Analysis' and contents_radio_an_cat_unit == 'Target' and contents_radio3 == 'Ethotic Profile':
         Target_compare_scor( data_list = corpora_list )
+
 
 
 
