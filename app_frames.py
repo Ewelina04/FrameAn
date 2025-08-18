@@ -29,6 +29,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 sns.set_theme(style="whitegrid")
 #plt.style.use("seaborn-talk")
+pd.set_option("styler.render.max_elements", 1091546)
 
 import time
 import re
@@ -2404,6 +2405,7 @@ else:
 
     elif contents_radio_type == 'Single Corpus Analysis' and contents_radio_an_cat_unit == 'Target' and contents_radio3 == 'Ethotic Profile':
         Target_compare_scor( data_list = corpora_list )
+
 
 
 
