@@ -596,6 +596,10 @@ def distribution_plot_compare(data_list):
 
                 st.write( "Confusion matrix: " )
                 st.write(confusion_matrix)
+
+                residuals = (obs - ex) / np.sqrt(ex)
+                st.write( "Residuals: " )
+                st.write(residuals)              
                 #add_spacelines(2)
             with corr_col2:
                 st.write( "**Detailed correlation**" )
@@ -2410,6 +2414,7 @@ else:
 
     elif contents_radio_type == 'Single Corpus Analysis' and contents_radio_an_cat_unit == 'Target' and contents_radio3 == 'Ethotic Profile':
         Target_compare_scor( data_list = corpora_list )
+
 
 
 
