@@ -572,7 +572,7 @@ def distribution_plot_compare(data_list):
                     f1.append(c1)
                     f2.append(c2)
                     mt_corrs.append( round(mt_corr, 3) )
-                    mt_corrs_p.append(np.nan)
+                    #mt_corrs_p.append(np.nan)
 
                     mt_corr = scipy.stats.pearsonr( df_cor2[corr_multiselect].values, df_cor2[contents_radio_categories].values )
                     f1.append(c1)
@@ -2423,6 +2423,7 @@ else:
 
     elif contents_radio_type == 'Single Corpus Analysis' and contents_radio_an_cat_unit == 'Target' and contents_radio3 == 'Ethotic Profile':
         Target_compare_scor( data_list = corpora_list )
+
 
 
 
