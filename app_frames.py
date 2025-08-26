@@ -558,6 +558,9 @@ def distribution_plot_compare(data_list):
             f1 = []
             f2 = []
             mt_corrs = []
+            pearson_corrs = []
+            mt_corrs_p = []
+            import scipy
 
             from sklearn.metrics import matthews_corrcoef
             for c1 in df[corr_multiselect].unique():
@@ -569,10 +572,16 @@ def distribution_plot_compare(data_list):
                     f1.append(c1)
                     f2.append(c2)
                     mt_corrs.append( round(mt_corr, 3) )
-                    #st.write(c1, c2, mt_corr)
+                    mt_corrs_p.append(np.nan)
+
+                    mt_corr = scipy.stats.pearsonr( df_cor2[corr_multiselect].values, df_cor2[contents_radio_categories].values )
+                    f1.append(c1)
+                    f2.append(c2)
+                    pearson_corrs.append( round(mt_corr.statistic, 3) )
+                    mt_corrs_p.append( round(mt_corr.pvalue, 4)  )          
 
             #st.write(matthews_corrcoef( df[corr_multiselect].values, df['ethos'].values))
-            matrix_corr = pd.DataFrame( {corr_multiselect:f1 , contents_radio_categories.capitalize():f2, 'correlation':mt_corrs} )
+            matrix_corr = pd.DataFrame( {corr_multiselect:f1 , contents_radio_categories.capitalize():f2, 'correlation_matthews':mt_corrs, 'correlation_phi':pearson_corrs, 'pvalue':mt_corrs_p} )
 
             cv, pval = cramers_corrected_stat( df[corr_multiselect].values, df[contents_radio_categories].values )
 
@@ -2414,6 +2423,7 @@ else:
 
     elif contents_radio_type == 'Single Corpus Analysis' and contents_radio_an_cat_unit == 'Target' and contents_radio3 == 'Ethotic Profile':
         Target_compare_scor( data_list = corpora_list )
+
 
 
 
