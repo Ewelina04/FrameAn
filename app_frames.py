@@ -580,7 +580,7 @@ def distribution_plot_compare(data_list):
                     mt_corrs_p.append( round(mt_corr.pvalue, 4)  )          
 
             #st.write(matthews_corrcoef( df[corr_multiselect].values, df['ethos'].values))
-            matrix_corr = pd.DataFrame( {corr_multiselect:f1 , contents_radio_categories.capitalize():f2, 'correlation_matthews':mt_corrs, 'correlation_phi':pearson_corrs, 'pvalue':mt_corrs_p} )
+            matrix_corr = pd.DataFrame( {corr_multiselect:f1 , contents_radio_categories.capitalize():f2, 'correlation_phi':pearson_corrs, 'pvalue':mt_corrs_p} )
 
             cv, pval = cramers_corrected_stat( df[corr_multiselect].values, df[contents_radio_categories].values )
 
@@ -2422,6 +2422,7 @@ else:
 
     elif contents_radio_type == 'Single Corpus Analysis' and contents_radio_an_cat_unit == 'Target' and contents_radio3 == 'Ethotic Profile':
         Target_compare_scor( data_list = corpora_list )
+
 
 
 
