@@ -632,6 +632,7 @@ def distribution_plot_compare(data_list):
                        'AgentText', 'CircumstancesText',
                          ]
             dff = df[dff_columns].copy()
+            dff = dff.drop_duplicates( subset = ['sentence', 'ethos'] )
             select_columns = st.multiselect("Choose columns for specifying conditions", dff_columns, dff_columns[-2])
             cols_columns = st.columns(len(select_columns))
             dict_cond = {}
@@ -2423,6 +2424,7 @@ else:
 
     elif contents_radio_type == 'Single Corpus Analysis' and contents_radio_an_cat_unit == 'Target' and contents_radio3 == 'Ethotic Profile':
         Target_compare_scor( data_list = corpora_list )
+
 
 
 
